@@ -7,27 +7,19 @@
   
   <style>
     :root {
-      --bg-color: #0f172a;
-      --panel-bg: #1e293b;
-      --card-bg: #334155;
-      --border-color: #475569;
-      --text-main: #f8fafc;
-      --text-muted: #cbd5e1;
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --danger: #ef4444;
-      --danger-hover: #dc2626;
-      --success: #10b981;
-      --warning: #f59e0b;
-    }
-
-    body.day-theme {
-      --bg-color: #f1f5f9;
+      /* 밝고 화사한 라이트 테마 기반 색상 팔레트 */
+      --bg-color: #f8fafc;
       --panel-bg: #ffffff;
-      --card-bg: #f8fafc;
+      --card-bg: #f1f5f9;
       --border-color: #cbd5e1;
       --text-main: #0f172a;
-      --text-muted: #475569;
+      --text-muted: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --danger: #dc2626;
+      --danger-hover: #b91c1c;
+      --success: #059669;
+      --warning: #d97706;
     }
 
     * {
@@ -47,7 +39,6 @@
       align-items: flex-start;
       padding: 24px;
       font-size: 18px;
-      transition: background-color 0.4s ease, color 0.4s ease;
     }
 
     .container {
@@ -66,7 +57,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
     }
 
     .header-top {
@@ -81,7 +72,7 @@
       font-size: 2.2rem;
       font-weight: 900;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #60a5fa, #f43f5e);
+      background: linear-gradient(135deg, #2563eb, #dc2626);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       display: flex;
@@ -92,7 +83,7 @@
     .title-icons {
       font-size: 1.6rem;
       letter-spacing: 2px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
     }
 
     .badge {
@@ -101,16 +92,16 @@
       font-size: 1rem;
       font-weight: 800;
     }
-    .badge-lobby { background: #475569; color: #fff; }
+    .badge-lobby { background: #e2e8f0; color: #334155; }
     .badge-day { background: #fef08a; color: #854d0e; }
-    .badge-night { background: #312e81; color: #c7d2fe; }
+    .badge-night { background: #1e1b4b; color: #c7d2fe; }
 
     .my-info-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: var(--card-bg);
-      padding: 12px 20px;
+      padding: 14px 20px;
       border-radius: 12px;
       font-size: 1.1rem;
       border: 1.5px solid var(--border-color);
@@ -135,7 +126,7 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
     }
 
     .panel-header {
@@ -151,12 +142,14 @@
       border-radius: 12px;
       font-size: 1.05rem;
       line-height: 1.5;
-      background: rgba(59, 130, 246, 0.15);
+      background: #eff6ff;
       border-left: 6px solid var(--primary);
+      color: #1e3a8a;
     }
     .banner.danger {
-      background: rgba(239, 68, 68, 0.15);
+      background: #fef2f2;
       border-color: var(--danger);
+      color: #991b1b;
     }
 
     .timer-display {
@@ -217,10 +210,22 @@
     .btn-kick {
       background: var(--danger);
       color: white;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       padding: 4px 8px;
       border-radius: 6px;
       margin-top: 4px;
+    }
+    .btn-card-kick {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--danger);
+      color: white;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      z-index: 10;
+      cursor: pointer;
     }
     .btn-block { width: 100%; padding: 18px; font-size: 1.2rem; }
 
@@ -249,25 +254,26 @@
     }
     .player-card.selectable:hover {
       transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
     }
     .player-card.selected {
       border-color: var(--warning) !important;
-      background: rgba(245, 158, 11, 0.25) !important;
-      box-shadow: 0 0 16px rgba(245, 158, 11, 0.6) !important;
+      background: #fef3c7 !important;
+      box-shadow: 0 0 16px rgba(217, 119, 6, 0.3) !important;
     }
     .player-card.dead {
-      opacity: 0.75;
-      filter: grayscale(80%);
+      opacity: 0.85;
+      filter: grayscale(40%);
       border-style: dashed;
       border-color: var(--danger);
+      background: #fef2f2;
     }
     .player-card.is-teammate {
       border-color: var(--danger);
-      background: rgba(239, 68, 68, 0.15);
+      background: #fee2e2;
     }
 
-    .avatar-icon { font-size: 2.4rem; }
+    .avatar-icon { font-size: 2.6rem; }
     .player-name {
       font-size: 1rem;
       font-weight: 800;
@@ -294,7 +300,7 @@
       height: 14px;
       border-radius: 50%;
       border: 2px solid #fff;
-      box-shadow: 0 0 4px rgba(0,0,0,0.5);
+      box-shadow: 0 0 4px rgba(0,0,0,0.3);
     }
 
     .secret-box {
@@ -310,36 +316,44 @@
       background: var(--card-bg);
       transition: background 0.2s;
     }
-    .secret-box:hover { border-color: var(--primary); }
+    .secret-box:hover { border-color: var(--primary); background: #f8fafc; }
     .role-title { font-size: 2rem; font-weight: 900; }
-    .role-mafia { color: #ef4444; }
-    .role-police { color: #3b82f6; }
-    .role-doctor { color: #10b981; }
-    .role-priest { color: #f59e0b; }
-    .role-sniper { color: #8b5cf6; }
-    .role-citizen { color: #94a3b8; }
+    .role-mafia { color: #dc2626; }
+    .role-police { color: #2563eb; }
+    .role-doctor { color: #059669; }
+    .role-citizen { color: #475569; }
 
+    /* 단체 전광판 (이름 크기 및 가시성 대폭 향상) */
     .host-dashboard {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 18px;
     }
     .host-card {
       background: var(--card-bg);
-      border: 2px solid var(--border-color);
-      border-radius: 14px;
-      padding: 18px 12px;
+      border: 2.5px solid var(--border-color);
+      border-radius: 16px;
+      padding: 22px 14px;
       text-align: center;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .host-card .player-name {
+      font-size: 1.4rem !important;
+      font-weight: 900 !important;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      margin: 4px 0;
     }
 
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(6px);
       display: none;
       align-items: center;
       justify-content: center;
@@ -358,11 +372,11 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
     }
 
     .death-notice-card {
-      background: rgba(239, 68, 68, 0.12);
+      background: #fef2f2;
       border: 3px dashed var(--danger);
       border-radius: 16px;
       padding: 20px 16px;
@@ -372,7 +386,7 @@
       gap: 10px;
     }
     .action-report-card {
-      background: rgba(59, 130, 246, 0.12);
+      background: #eff6ff;
       border: 3px dashed var(--primary);
       border-radius: 16px;
       padding: 20px 16px;
@@ -383,7 +397,7 @@
       text-align: left;
       width: 100%;
     }
-    .death-name { font-size: 2.2rem; font-weight: 900; color: #ef4444; line-height: 1.1; }
+    .death-name { font-size: 2.2rem; font-weight: 900; color: #dc2626; line-height: 1.1; }
     .death-role { font-size: 1.6rem; font-weight: 900; color: var(--warning); margin-top: 2px; }
   </style>
 </head>
@@ -393,7 +407,7 @@
       <div class="header-top">
         <div class="title">
           <span>MAFIA ONLINE</span>
-          <span class="title-icons">🕶️👮‍♂️💉✝️🎯</span>
+          <span class="title-icons">🕶️👮‍♂️💉🧑‍🌾</span>
         </div>
         <span id="phaseBadge" class="badge badge-lobby">대기실</span>
       </div>
@@ -428,7 +442,7 @@
         <span>게임 참가 / 방 만들기</span>
       </div>
       <div class="banner">
-        모바일 또는 PC로 4자리 숫자 보안코드를 입력하여 실시간으로 함께 즐기세요!
+        ✨ 모바일 또는 PC로 4자리 숫자 보안코드를 입력하여 실시간으로 함께 즐기세요! (동일 닉네임 재접속 시 자동 복구)
       </div>
 
       <div class="input-group">
@@ -448,16 +462,16 @@
     <section id="panelLobby" class="panel" style="display: none;">
       <div class="panel-header">
         <span>대기실 [ 보안코드: <span id="roomCodeDisplay" style="color:var(--primary); letter-spacing: 2px;">----</span> ]</span>
-        <span id="lobbyPlayerCount" style="font-size:1rem; color:var(--text-muted)">0 / 5명 (최소 5명)</span>
+        <span id="lobbyPlayerCount" style="font-size:1rem; color:var(--text-muted)">0 / 4명 (최소 4명)</span>
       </div>
       <div class="banner">
-        친구들에게 4자리 보안코드를 공유하세요! <b>의사, 경찰, 성직자, 저격수</b> 직업이 함께 포함됩니다.
+        친구들에게 4자리 보안코드를 공유하세요! <b>마피아, 경찰, 의사, 시민</b> 직업이 함께 포함됩니다.
       </div>
 
       <div class="player-grid" id="lobbyPlayerGrid"></div>
 
       <button id="btnStartGame" class="btn-primary btn-block" disabled style="display: none;">
-        게임 시작하기 (최소 5명 필요)
+        게임 시작하기 (최소 4명 필요)
       </button>
       <div id="waitHostNotice" style="text-align: center; font-size: 1rem; color: var(--text-muted); display: none;">
         방장이 게임을 시작하기를 기다리고 있습니다...
@@ -509,34 +523,29 @@
 
     <section id="panelNight" class="panel" style="display: none;">
       <div class="panel-header">
-        <span>🌙 밤 - 비밀 행동 단계</span>
-        <span id="nightRoleTitle" class="badge badge-night">행동 진행 중</span>
+        <span>🌙 밤 - 비밀 행동</span>
+        <span id="nightRoleTitle" class="badge badge-night">행동 완료 대기 중</span>
       </div>
       <div id="nightBanner" class="banner danger">
-        밤이 되었습니다. 각 직업의 순서에 맞춰 비밀 능력을 사용하세요!
+        밤이 되었습니다. 특수 직업은 비밀 능력을 수행하세요!
       </div>
-      <div id="mafiaTeamNotice" class="banner" style="display: none; background: rgba(239, 68, 68, 0.2); border-color: var(--danger);"></div>
+      <div id="mafiaTeamNotice" class="banner" style="display: none; background: #fee2e2; border-color: var(--danger); color: #991b1b;"></div>
       <div id="nightGuideText" style="font-weight:800; font-size:1.1rem;"></div>
 
       <div class="player-grid" id="nightPlayerGrid"></div>
 
-      <div style="display: flex; gap: 12px; width: 100%;">
-        <button id="btnSkipNightAction" class="btn-outline" style="flex: 1; display: none;">
-          턴 넘기기 (스킵)
-        </button>
-        <button id="btnSubmitNightAction" class="btn-danger btn-block" style="flex: 2;" disabled>
-          행동 완료
-        </button>
-      </div>
+      <button id="btnSubmitNightAction" class="btn-danger btn-block" disabled>
+        행동 완료
+      </button>
     </section>
 
     <section id="panelHostView" class="panel" style="display: none;">
       <div class="panel-header">
-        <span>🖥️ 방장 중앙 관전 통제판</span>
-        <span id="hostStatusBadge" class="badge badge-lobby">진행 상황 실시간 생중계</span>
+        <span>🖥️ 방장 중앙 관전 통제판 (직업 100% 공개)</span>
+        <span id="hostStatusBadge" class="badge badge-lobby">실시간 모니터링 중</span>
       </div>
       <div class="banner">
-        방장은 생존 중인 사람들의 직업을 볼 수 없습니다. (사망자의 직업도 투명하게 공개)
+        방장에게는 모든 플레이어의 실제 직업과 행동 완료 여부가 투명하게 보입니다. (우측 상단 ❌로 강퇴 가능)
       </div>
       <div class="host-dashboard" id="hostDashboardGrid"></div>
       <button id="btnReturnToLobbyHost" class="btn-primary btn-block" style="display: none; background:var(--success);">
@@ -574,13 +583,10 @@
       MAFIA: '마피아',
       DOCTOR: '의사',
       POLICE: '경찰',
-      PRIEST: '성직자',
-      SNIPER: '저격수',
       CITIZEN: '시민'
     };
 
     const MAFIA_COLORS = ['#ef4444', '#f59e0b', '#ec4899', '#8b5cf6'];
-    const NIGHT_STEPS = ['MAFIA', 'POLICE', 'DOCTOR', 'PRIEST', 'SNIPER'];
 
     const clientState = {
       roomCode: null,
@@ -601,7 +607,15 @@
     let localTimerInterval = null;
     let lastNotifiedEventId = null;
     let lastNotifiedEndGameId = null;
-    let isRendering = false; // 병목(연속 렌더링) 차단 가드
+    let isRendering = false;
+
+    // 직업별 사망 시 차림새(아이콘) 반환 함수
+    function getDeadAvatarByRole(role) {
+      if (role === ROLES.MAFIA) return '🦹‍♂️'; // 수갑/포승줄 찬 마피아
+      if (role === ROLES.POLICE) return '🚨'; // 순찰차 경광등 / 제복 차림
+      if (role === ROLES.DOCTOR) return '🩺'; // 환자복 / 청진기 차림
+      return '👻'; // 일반 시민 유령
+    }
 
     function playChimeSound() {
       try {
@@ -670,7 +684,6 @@
     const nightGuideText = document.getElementById('nightGuideText');
     const nightPlayerGrid = document.getElementById('nightPlayerGrid');
     const btnSubmitNightAction = document.getElementById('btnSubmitNightAction');
-    const btnSkipNightAction = document.getElementById('btnSkipNightAction');
 
     const commonModal = document.getElementById('commonModal');
     const modalTitle = document.getElementById('modalTitle');
@@ -749,26 +762,27 @@
         }
 
         const roomData = roomSnapshot.val();
-        if (roomData.status !== 'LOBBY') {
-          showModal('입장 불가', '이미 게임이 진행 중인 방입니다.');
-          return;
-        }
-
         const existingPlayers = Object.values(roomData.players || {});
-        if (existingPlayers.some(p => p.name.toLowerCase() === nickname.toLowerCase())) {
-          showModal('중복 닉네임', `[${nickname}] 은(는) 해당 방에 이미 존재하는 닉네임입니다.`);
-          return;
-        }
+        const foundPlayer = existingPlayers.find(p => p.name.toLowerCase() === nickname.toLowerCase());
 
-        const myId = 'p_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
-        await set(ref(db, `rooms/${code}/players/${myId}`), {
-          id: myId,
-          name: nickname,
-          role: null,
-          isAlive: true,
-          deadReason: '',
-          readyCheck: false
-        });
+        let myId = '';
+        if (foundPlayer) {
+          myId = foundPlayer.id;
+        } else {
+          if (roomData.status !== 'LOBBY') {
+            showModal('입장 불가', '이미 게임이 진행 중인 방입니다. (신규 참가 불가)');
+            return;
+          }
+          myId = 'p_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+          await set(ref(db, `rooms/${code}/players/${myId}`), {
+            id: myId,
+            name: nickname,
+            role: null,
+            isAlive: true,
+            deadReason: '',
+            readyCheck: false
+          });
+        }
 
         initClientSession(code, myId, nickname, false);
       } catch (err) {
@@ -813,7 +827,7 @@
           clientState.isAlive = me.isAlive;
           
           if (data.status !== 'ROLE_CHECK' && data.status !== 'LOBBY') {
-            myRoleDisplay.textContent = clientState.isAlive ? '비공개 (보안 유지)' : '사망';
+            myRoleDisplay.textContent = clientState.isAlive ? (me.role || '비공개') : '사망';
           } else if (me.role) {
             myRoleDisplay.textContent = me.role;
           }
@@ -828,7 +842,6 @@
         clientState.isHost = (data.hostId === clientState.myPlayerId);
         renderDashboard(data);
 
-        // 팝업 이벤트 중복 방지 가드 (병목 방지 핵심)
         if (data.latestGameEvent && data.latestGameEvent.id !== lastNotifiedEventId) {
           lastNotifiedEventId = data.latestGameEvent.id;
           playChimeSound();
@@ -838,7 +851,7 @@
             if (ev.deadName) {
               deathHtml = `
                 <div class="death-notice-card">
-                  <span class="avatar-icon">💀</span>
+                  <span class="avatar-icon">${getDeadAvatarByRole(ev.deadRole)}</span>
                   <div>
                     <div class="death-name">${ev.deadName} 님</div>
                     <div class="death-role">${ev.deadRole}</div>
@@ -870,7 +883,7 @@
               <div style="font-size:1.8rem; font-weight:900; color:var(--warning);">
                 🏆 ${data.gameOverInfo.winnerTitle}
               </div>
-              <div style="font-size:1.1rem; line-height:1.5; background:rgba(59,130,246,0.1); padding:14px; border-radius:12px;">
+              <div style="font-size:1.1rem; line-height:1.5; background:#fef3c7; padding:14px; border-radius:12px; color:#78350f;">
                 ${data.gameOverInfo.desc}
               </div>
               <div style="background:var(--card-bg); padding:16px; border-radius:12px; border:1px solid var(--border-color);">
@@ -890,7 +903,6 @@
           panelHostView.style.display = 'none';
         }
 
-        // requestAnimationFrame으로 화면 렌더링 부드럽게 예약 (병목 제거)
         if (!isRendering) {
           isRendering = true;
           requestAnimationFrame(() => {
@@ -922,24 +934,47 @@
       }
     }
 
+    // 🖥️ 방장 중앙 관전 통제판 (이름 크기 대폭 상향 및 사망 시 차림새 적용)
     function renderHostDashboard(data) {
       const players = Object.values(data.players || {});
+      const nightActions = data.nightActions || {};
       hostDashboardGrid.innerHTML = '';
 
       players.forEach(p => {
         const card = document.createElement('div');
         card.className = `host-card ${!p.isAlive ? 'dead' : ''}`;
-        const displayedRole = p.isAlive ? '❓ 미공개 (생존)' : `${p.role} (사망)`;
+        
+        let roleColor = '#0f172a';
+        if (p.role === ROLES.MAFIA) roleColor = '#dc2626';
+        else if (p.role === ROLES.POLICE) roleColor = '#2563eb';
+        else if (p.role === ROLES.DOCTOR) roleColor = '#059669';
+
+        let actionStatus = '💤 대기 중';
+        if (!p.isAlive) actionStatus = '👼 사망';
+        else if (p.role === ROLES.CITIZEN) actionStatus = '🧑‍🌾 휴식 중';
+        else if (nightActions[p.id]) actionStatus = '✅ 완료';
+
+        // 사망 시 직업별 맞춤 차림새 아이콘 부여
+        const avatarDisplay = p.isAlive ? '👤' : getDeadAvatarByRole(p.role);
 
         card.innerHTML = `
-          <span class="avatar-icon">${!p.isAlive ? '👼' : '👤'}</span>
+          <button class="btn-card-kick" data-id="${p.id}">❌ 강퇴</button>
+          <span class="avatar-icon">${avatarDisplay}</span>
           <span class="player-name">${p.name}</span>
-          <span style="font-weight:900; color:var(--primary); font-size:0.95rem;">${displayedRole}</span>
-          <span class="status-badge" style="background:${p.isAlive ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}">
-            ${p.isAlive ? '생존' : '사망 (' + p.deadReason + ')'}
+          <span style="font-weight:900; color:${roleColor}; font-size:1.1rem;">직업: ${p.role || '미정'}</span>
+          <span class="status-badge" style="background:${p.isAlive ? '#d1fae5' : '#fee2e2'}; color:${p.isAlive ? '#065f46' : '#991b1b'};">
+            ${p.isAlive ? actionStatus : '사망 (' + (p.deadReason || '기타') + ')'}
           </span>
         `;
         hostDashboardGrid.appendChild(card);
+      });
+
+      document.querySelectorAll('.btn-card-kick').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          const targetId = e.target.getAttribute('data-id');
+          await remove(ref(db, `rooms/${clientState.roomCode}/players/${targetId}`));
+          checkWinCondition(clientState.currentRoomData);
+        });
       });
 
       if (data.status === 'END') {
@@ -954,7 +989,7 @@
       phaseBadge.className = 'badge badge-lobby';
 
       const players = Object.values(data.players || {});
-      lobbyPlayerCount.textContent = `${players.length}명 참가 중 (최소 5명 필요)`;
+      lobbyPlayerCount.textContent = `${players.length}명 참가 중 (최소 4명 필요)`;
 
       lobbyPlayerGrid.innerHTML = '';
       players.forEach(p => {
@@ -978,9 +1013,9 @@
 
         btnStartGame.style.display = 'block';
         waitHostNotice.style.display = 'none';
-        btnStartGame.disabled = players.length < 5;
-        btnStartGame.textContent = players.length < 5 
-          ? `게임 시작 (${players.length}/5명)` 
+        btnStartGame.disabled = players.length < 4;
+        btnStartGame.textContent = players.length < 4 
+          ? `게임 시작 (${players.length}/4명)` 
           : `총 ${players.length}명으로 게임 시작!`;
       } else {
         btnStartGame.style.display = 'none';
@@ -994,7 +1029,7 @@
 
       const players = Object.values(data.players || {});
       const n = players.length;
-      if (n < 5) return;
+      if (n < 4) return;
 
       let mafiaCount = 1;
       if (n >= 7 && n <= 9) mafiaCount = 2;
@@ -1004,8 +1039,6 @@
       for (let i = 0; i < mafiaCount; i++) rolesPool.push(ROLES.MAFIA);
       rolesPool.push(ROLES.POLICE);
       rolesPool.push(ROLES.DOCTOR);
-      rolesPool.push(ROLES.PRIEST);
-      rolesPool.push(ROLES.SNIPER);
 
       while(rolesPool.length < n) rolesPool.push(ROLES.CITIZEN);
 
@@ -1025,7 +1058,6 @@
       updates[`rooms/${clientState.roomCode}/dayCount`] = 1;
       updates[`rooms/${clientState.roomCode}/dayVotes`] = null;
       updates[`rooms/${clientState.roomCode}/nightActions`] = null;
-      updates[`rooms/${clientState.roomCode}/nightStep`] = 'MAFIA';
       updates[`rooms/${clientState.roomCode}/latestGameEvent`] = null;
       updates[`rooms/${clientState.roomCode}/gameOverInfo`] = null;
 
@@ -1072,8 +1104,6 @@
         if (clientState.myRole === ROLES.MAFIA) { icon = '🕶️'; cls = 'role-mafia'; }
         else if (clientState.myRole === ROLES.DOCTOR) { icon = '💉'; cls = 'role-doctor'; }
         else if (clientState.myRole === ROLES.POLICE) { icon = '👮‍♂️'; cls = 'role-police'; }
-        else if (clientState.myRole === ROLES.PRIEST) { icon = '✝️'; cls = 'role-priest'; }
-        else if (clientState.myRole === ROLES.SNIPER) { icon = '🎯'; cls = 'role-sniper'; }
 
         secretBox.innerHTML = `
           <span class="avatar-icon">${icon}</span>
@@ -1162,14 +1192,17 @@
           card.classList.add('selected');
         }
 
-        let statusHtml = `<span class="status-badge" style="background:rgba(16,185,129,0.2); color:var(--success);">생존</span>`;
+        let statusHtml = `<span class="status-badge" style="background:#d1fae5; color:#065f46;">생존</span>`;
         if (!p.isAlive) {
           const reasonText = p.deadReason ? `사망 (${p.deadReason})` : '사망';
-          statusHtml = `<span class="status-badge" style="background:rgba(239,68,68,0.25); color:var(--danger);">${reasonText}</span>`;
+          statusHtml = `<span class="status-badge" style="background:#fee2e2; color:#991b1b;">${reasonText}</span>`;
         }
 
+        // 낮 그리드에도 사망 시 직업 맞춤 차림새 적용
+        const avatarDisplay = p.isAlive ? '👤' : getDeadAvatarByRole(p.role);
+
         card.innerHTML = `
-          <span class="avatar-icon">${!p.isAlive ? '👼' : '👤'}</span>
+          <span class="avatar-icon">${avatarDisplay}</span>
           <span class="player-name">${p.name}</span>
           ${statusHtml}
         `;
@@ -1262,7 +1295,6 @@
 
       await update(ref(db, `rooms/${clientState.roomCode}`), {
         status: 'NIGHT',
-        nightStep: 'MAFIA',
         dayAnnouncement: announcement,
         dayVotes: null,
         nightActions: null
@@ -1274,90 +1306,61 @@
       panelDay.style.display = 'none';
       if (!clientState.isHost) panelNight.style.display = 'flex';
 
-      phaseBadge.textContent = '🌙 밤 (순차적 비밀 행동)';
+      phaseBadge.textContent = '🌙 밤 (비밀 행동)';
       phaseBadge.className = 'badge badge-night';
 
-      const currentStep = data.nightStep || 'MAFIA';
       const nightActions = data.nightActions || {};
       const players = Object.values(data.players || {});
       const role = clientState.myRole;
 
       clientState.selectedNightTargetId = null;
-      btnSkipNightAction.style.display = 'none';
       mafiaTeamNotice.style.display = 'none';
 
-      let isMyTurnToAct = false;
+      const hasActed = !!nightActions[clientState.myPlayerId];
 
       if (!clientState.isAlive) {
         nightRoleTitle.textContent = '관전 중';
         nightBanner.innerHTML = '👼 사망하여 밤 행동에 참여할 수 없습니다.';
-        nightGuideText.innerHTML = '관전 모드로 다른 플레이어들의 턴 진행을 지켜보고 있습니다.';
+        nightGuideText.innerHTML = '관전 모드로 밤 진행을 지켜보고 있습니다.';
+        btnSubmitNightAction.style.display = 'none';
+      } else if (role === ROLES.CITIZEN) {
+        nightRoleTitle.textContent = '시민 휴식 중';
+        nightBanner.innerHTML = '🧑‍🌾 <b>시민 휴식:</b> 마피아와 특수 직업들이 활동 중입니다. 밤이 지나가기를 기다리세요.';
+        nightGuideText.innerHTML = '😴 잠시 후 아침이 밝아옵니다...';
+        btnSubmitNightAction.style.display = 'none';
+      } else if (hasActed) {
+        nightRoleTitle.textContent = '행동 완료';
+        nightBanner.innerHTML = '✅ <b>능력을 사용했습니다.</b> 다른 직업의 행동을 기다리는 중입니다.';
+        nightGuideText.innerHTML = '⏳ 모두 완료되면 바로 아침이 밝아옵니다...';
         btnSubmitNightAction.style.display = 'none';
       } else {
-        if (currentStep === 'MAFIA') {
-          nightRoleTitle.textContent = '1단계: 마피아 턴';
-          nightBanner.innerHTML = '🔫 <b>마피아가 습격할 사람을 고르고 있습니다.</b> 동료들과 합의하여 대상을 지목하세요.';
-          if (role === ROLES.MAFIA) {
-            isMyTurnToAct = true;
-            const mafiaTeam = players.filter(p => p.role === ROLES.MAFIA).map(p => p.name).join(', ');
-            mafiaTeamNotice.style.display = 'block';
-            mafiaTeamNotice.innerHTML = `🕶️ <b>마피아 팀:</b> [ ${mafiaTeam} ]<br>💡 카드를 누르면 동료들에게 타겟 실시간 마커가 공유됩니다!`;
-          } else {
-            nightGuideText.innerHTML = `😴 현재 마피아 팀이 습격 대상을 고르는 중입니다... (내 직업: ${role})`;
-          }
-        } else if (currentStep === 'POLICE') {
-          nightRoleTitle.textContent = '2단계: 경찰 턴';
-          nightBanner.innerHTML = '👮‍♂️ <b>경찰이 조사 중입니다.</b> 의심되는 플레이어 한 명을 지목해 마피아 여부를 확인하세요.';
-          if (role === ROLES.POLICE) {
-            isMyTurnToAct = true;
-          } else {
-            nightGuideText.innerHTML = `😴 현재 경찰이 수사를 진행하는 중입니다... (내 직업: ${role})`;
-          }
-        } else if (currentStep === 'DOCTOR') {
-          nightRoleTitle.textContent = '3단계: 의사 턴';
-          nightBanner.innerHTML = '💉 <b>의사가 치료 중입니다.</b> 마피아의 습격으로부터 지켜낼 플레이어를 선택하세요.';
-          if (role === ROLES.DOCTOR) {
-            isMyTurnToAct = true;
-          } else {
-            nightGuideText.innerHTML = `😴 현재 의사가 치료 대상을 고민 중입니다... (내 직업: ${role})`;
-          }
-        } else if (currentStep === 'PRIEST') {
-          nightRoleTitle.textContent = '4단계: 성직자 턴';
-          nightBanner.innerHTML = '✝️ <b>성직자가 기도 중입니다.</b> 무덤 속 사망자를 구원하거나 턴을 넘기세요.';
-          if (role === ROLES.PRIEST) {
-            isMyTurnToAct = true;
-            btnSkipNightAction.style.display = 'block';
-          } else {
-            nightGuideText.innerHTML = `😴 현재 성직자가 부활 기도를 올리는 중입니다... (내 직업: ${role})`;
-          }
-        } else if (currentStep === 'SNIPER') {
-          nightRoleTitle.textContent = '5단계: 저격수 턴';
-          nightBanner.innerHTML = '🎯 <b>저격수가 목표물을 찾는 중입니다.</b> 과감하게 저격하거나 턴을 넘기세요.';
-          if (role === ROLES.SNIPER) {
-            isMyTurnToAct = true;
-            btnSkipNightAction.style.display = 'block';
-          } else {
-            nightGuideText.innerHTML = `😴 현재 저격수가 목표를 조준 중입니다... (내 직업: ${role})`;
-          }
+        if (role === ROLES.MAFIA) {
+          nightRoleTitle.textContent = '마피아 습격';
+          nightBanner.innerHTML = '🔫 <b>마피아 습격:</b> 오늘 밤 제거할 플레이어를 선택하세요.';
+          const mafiaTeam = players.filter(p => p.role === ROLES.MAFIA).map(p => p.name).join(', ');
+          mafiaTeamNotice.style.display = 'block';
+          mafiaTeamNotice.innerHTML = `🕶️ <b>마피아 팀:</b> [ ${mafiaTeam} ]<br>💡 카드를 누르면 동료들에게 타겟 마커가 실시간 공유됩니다!`;
+        } else if (role === ROLES.POLICE) {
+          nightRoleTitle.textContent = '경찰 수사';
+          nightBanner.innerHTML = '👮‍♂️ <b>경찰 수사:</b> 마피아인지 조사할 플레이어를 선택하세요.';
+        } else if (role === ROLES.DOCTOR) {
+          nightRoleTitle.textContent = '의사 치료';
+          nightBanner.innerHTML = '💉 <b>의사 치료:</b> 마피아의 습격으로부터 지켜낼 플레이어를 선택하세요.';
         }
 
-        if (isMyTurnToAct) {
-          nightGuideText.innerHTML = `✨ **당신의 턴입니다!** 행동할 대상을 아래에서 선택하거나 [턴 넘기기]를 누르세요.`;
-          btnSubmitNightAction.style.display = 'block';
-          btnSubmitNightAction.disabled = true;
-        } else {
-          btnSubmitNightAction.style.display = 'none';
-        }
+        nightGuideText.innerHTML = `✨ 아래 플레이어를 지목한 후 [행동 완료]를 누르세요.`;
+        btnSubmitNightAction.style.display = 'block';
+        btnSubmitNightAction.disabled = true;
       }
 
-      renderNightGrid(data.players, nightActions, currentStep, isMyTurnToAct);
+      renderNightGrid(data.players, nightActions, hasActed);
 
       if (clientState.isHost) {
-        checkAndAdvanceNightStep(data);
+        checkAndConcludeNightHostOnly(data);
       }
     }
 
-    function renderNightGrid(playersObj, nightActions, currentStep, isMyTurnToAct) {
+    function renderNightGrid(playersObj, nightActions, hasActed) {
       const players = Object.values(playersObj || {});
       nightPlayerGrid.innerHTML = '';
 
@@ -1365,34 +1368,31 @@
         const card = document.createElement('div');
         const isSelfMafia = (clientState.myRole === ROLES.MAFIA);
         const isTargetMafia = (p.role === ROLES.MAFIA);
+        const role = clientState.myRole;
         
         let canSelect = false;
-        if (clientState.isAlive && isMyTurnToAct) {
-          if (currentStep === 'PRIEST') {
-            canSelect = !p.isAlive;
-          } else if (currentStep === 'SNIPER') {
-            canSelect = p.isAlive && p.id !== clientState.myPlayerId;
-          } else if (currentStep === 'MAFIA') {
+        if (clientState.isAlive && !hasActed && role !== ROLES.CITIZEN) {
+          if (role === ROLES.MAFIA) {
             canSelect = p.isAlive && !(isSelfMafia && isTargetMafia);
-          } else {
+          } else if (role === ROLES.POLICE || role === ROLES.DOCTOR) {
             canSelect = p.isAlive;
           }
         }
 
-        let statusHtml = `<span class="status-badge" style="background:rgba(16,185,129,0.2); color:var(--success);">생존</span>`;
+        let statusHtml = `<span class="status-badge" style="background:#d1fae5; color:#065f46;">생존</span>`;
         if (!p.isAlive) {
           const reasonText = p.deadReason ? `사망 (${p.deadReason})` : '사망';
-          statusHtml = `<span class="status-badge" style="background:rgba(239,68,68,0.25); color:var(--danger);">${reasonText}</span>`;
+          statusHtml = `<span class="status-badge" style="background:#fee2e2; color:#991b1b;">${reasonText}</span>`;
         }
 
-        card.className = `player-card ${!p.isAlive ? 'dead' : ''} ${canSelect ? 'selectable' : ''} ${(isSelfMafia && isTargetMafia && currentStep === 'MAFIA') ? 'is-teammate' : ''}`;
+        card.className = `player-card ${!p.isAlive ? 'dead' : ''} ${canSelect ? 'selectable' : ''} ${(isSelfMafia && isTargetMafia) ? 'is-teammate' : ''}`;
 
         if (clientState.selectedNightTargetId === p.id) {
           card.classList.add('selected');
         }
 
         let markersHtml = '';
-        if (isSelfMafia && currentStep === 'MAFIA') {
+        if (isSelfMafia) {
           const mafiaList = players.filter(x => x.role === ROLES.MAFIA);
           let mDots = '';
           mafiaList.forEach((m, idx) => {
@@ -1407,11 +1407,13 @@
           }
         }
 
+        const avatarDisplay = p.isAlive ? '👤' : getDeadAvatarByRole(p.role);
+
         card.innerHTML = `
-          <span class="avatar-icon">${!p.isAlive ? '👼' : '👤'}</span>
+          <span class="avatar-icon">${avatarDisplay}</span>
           <span class="player-name">${p.name}</span>
           ${statusHtml}
-          ${(isSelfMafia && isTargetMafia && currentStep === 'MAFIA') ? '<span class="status-badge" style="background:rgba(239,68,68,0.3)">마피아 동료</span>' : ''}
+          ${(isSelfMafia && isTargetMafia) ? '<span class="status-badge" style="background:#fee2e2; color:#dc2626;">마피아 동료</span>' : ''}
           ${markersHtml}
         `;
 
@@ -1419,9 +1421,9 @@
           card.addEventListener('click', async () => {
             clientState.selectedNightTargetId = p.id;
             btnSubmitNightAction.disabled = false;
-            renderNightGrid(playersObj, nightActions, currentStep, isMyTurnToAct);
+            renderNightGrid(playersObj, nightActions, hasActed);
 
-            if (clientState.myRole === ROLES.MAFIA && currentStep === 'MAFIA') {
+            if (clientState.myRole === ROLES.MAFIA) {
               await update(ref(db, `rooms/${clientState.roomCode}/nightActions`), {
                 [clientState.myPlayerId]: p.id
               });
@@ -1434,12 +1436,11 @@
 
     btnSubmitNightAction.addEventListener('click', async () => {
       const targetId = clientState.selectedNightTargetId;
-      const currentStep = clientState.currentRoomData.nightStep;
       if (!targetId || !clientState.isAlive) return;
 
       btnSubmitNightAction.disabled = true;
 
-      if (clientState.myRole === ROLES.POLICE && currentStep === 'POLICE') {
+      if (clientState.myRole === ROLES.POLICE) {
         const targetPlayer = clientState.currentRoomData.players[targetId];
         if (targetPlayer) {
           const isMafia = (targetPlayer.role === ROLES.MAFIA);
@@ -1454,61 +1455,17 @@
       await update(ref(db, `rooms/${clientState.roomCode}/nightActions`), {
         [clientState.myPlayerId]: targetId
       });
-
-      await checkAndAdvanceNightStepHostOnly(clientState.currentRoomData);
     });
 
-    btnSkipNightAction.addEventListener('click', async () => {
-      if (!clientState.isAlive) return;
-      btnSkipNightAction.disabled = true;
-
-      await update(ref(db, `rooms/${clientState.roomCode}/nightActions`), {
-        [clientState.myPlayerId]: 'SKIP'
-      });
-
-      await checkAndAdvanceNightStepHostOnly(clientState.currentRoomData);
-    });
-
-    async function checkAndAdvanceNightStep(data) {
-      if (!clientState.isHost) return;
-      await checkAndAdvanceNightStepHostOnly(data);
-    }
-
-    async function checkAndAdvanceNightStepHostOnly(data) {
-      const currentStep = data.nightStep || 'MAFIA';
+    async function checkAndConcludeNightHostOnly(data) {
       const players = Object.values(data.players || {});
+      const aliveSpecialPlayers = players.filter(p => p.isAlive && p.role !== ROLES.CITIZEN);
       const nightActions = data.nightActions || {};
 
-      let stepDone = false;
+      const actedCount = aliveSpecialPlayers.filter(p => nightActions[p.id]).length;
 
-      if (currentStep === 'MAFIA') {
-        const aliveMafias = players.filter(p => p.isAlive && p.role === ROLES.MAFIA);
-        const actedMafias = aliveMafias.filter(m => nightActions[m.id]);
-        if (aliveMafias.length === 0 || actedMafias.length >= aliveMafias.length) stepDone = true;
-      } else if (currentStep === 'POLICE') {
-        const police = players.find(p => p.isAlive && p.role === ROLES.POLICE);
-        if (!police || nightActions[police.id]) stepDone = true;
-      } else if (currentStep === 'DOCTOR') {
-        const doctor = players.find(p => p.isAlive && p.role === ROLES.DOCTOR);
-        if (!doctor || nightActions[doctor.id]) stepDone = true;
-      } else if (currentStep === 'PRIEST') {
-        const priest = players.find(p => p.isAlive && p.role === ROLES.PRIEST);
-        if (!priest || nightActions[priest.id]) stepDone = true;
-      } else if (currentStep === 'SNIPER') {
-        const sniper = players.find(p => p.isAlive && p.role === ROLES.SNIPER);
-        if (!sniper || nightActions[sniper.id]) stepDone = true;
-      }
-
-      if (stepDone) {
-        const currentIndex = NIGHT_STEPS.indexOf(currentStep);
-        if (currentIndex < NIGHT_STEPS.length - 1) {
-          const nextStep = NIGHT_STEPS[currentIndex + 1];
-          await update(ref(db, `rooms/${clientState.roomCode}`), {
-            nightStep: nextStep
-          });
-        } else {
-          await concludeNightActions(data, nightActions);
-        }
+      if (aliveSpecialPlayers.length > 0 && actedCount >= aliveSpecialPlayers.length) {
+        await concludeNightActions(data, nightActions);
       }
     }
 
@@ -1516,20 +1473,12 @@
       const players = data.players || {};
       const mafiaVotes = {};
       let doctorTarget = null;
-      let priestTarget = null;
-      let sniperTarget = null;
-      let sniperId = null;
 
       for (const [pId, tId] of Object.entries(actions)) {
         const p = players[pId];
-        if (!p || tId === 'SKIP') continue;
+        if (!p) continue;
         if (p.role === ROLES.MAFIA) mafiaVotes[tId] = (mafiaVotes[tId] || 0) + 1;
         if (p.role === ROLES.DOCTOR) doctorTarget = tId;
-        if (p.role === ROLES.PRIEST) priestTarget = tId;
-        if (p.role === ROLES.SNIPER) {
-          sniperTarget = tId;
-          sniperId = pId;
-        }
       }
 
       let mafiaTarget = null;
@@ -1556,39 +1505,11 @@
         }
       }
 
-      if (sniperTarget && sniperId) {
-        const targetPlayer = players[sniperTarget];
-        const sniperPlayer = players[sniperId];
-
-        if (targetPlayer && targetPlayer.isAlive) {
-          if (targetPlayer.role === ROLES.MAFIA) {
-            deadListThisNight.push({ player: targetPlayer, reason: '저격수 사살' });
-            actionReports.push(`🎯 <b>${targetPlayer.name}</b> 님 - 저격수의 총에 맞아 사살됨`);
-          } else {
-            deadListThisNight.push({ player: targetPlayer, reason: '저격 오발 사고' });
-            deadListThisNight.push({ player: sniperPlayer, reason: '저격 실패 죄책감 자폭' });
-            actionReports.push(`💥 <b>${targetPlayer.name}</b> 님 - 저격수 오발 사고 피해 사망`);
-            actionReports.push(`💥 <b>${sniperPlayer.name}</b> 님 - 저격 실패 후 자폭`);
-          }
-        }
-      }
-
       for (const item of deadListThisNight) {
         await update(ref(db, `rooms/${clientState.roomCode}/players/${item.player.id}`), {
           isAlive: false,
           deadReason: item.reason
         });
-      }
-
-      if (priestTarget) {
-        const resurrected = players[priestTarget];
-        if (resurrected && !resurrected.isAlive) {
-          await update(ref(db, `rooms/${clientState.roomCode}/players/${resurrected.id}`), {
-            isAlive: true,
-            deadReason: ''
-          });
-          actionReports.push(`✨ <b>${resurrected.name}</b> 님 - 성직자가 부활시킴`);
-        }
       }
 
       if (actionReports.length === 0) {
@@ -1616,7 +1537,6 @@
         dayCount: nextDayCount,
         dayAnnouncement: `☀️ 밤사이의 일들이 정리되고 새로운 아침이 밝았습니다.`,
         nightActions: null,
-        nightStep: 'MAFIA',
         timerEndTime: Date.now() + 30000
       });
     }
@@ -1680,7 +1600,6 @@
       updates[`rooms/${clientState.roomCode}/dayCount`] = 1;
       updates[`rooms/${clientState.roomCode}/dayVotes`] = null;
       updates[`rooms/${clientState.roomCode}/nightActions`] = null;
-      updates[`rooms/${clientState.roomCode}/nightStep`] = 'MAFIA';
       updates[`rooms/${clientState.roomCode}/latestGameEvent`] = null;
       updates[`rooms/${clientState.roomCode}/gameOverInfo`] = null;
 
