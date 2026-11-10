@@ -7,7 +7,6 @@
   
   <style>
     :root {
-      /* 밝고 화사한 라이트 테마 기반 색상 팔레트 */
       --bg-color: #f8fafc;
       --panel-bg: #ffffff;
       --card-bg: #f1f5f9;
@@ -323,7 +322,6 @@
     .role-doctor { color: #059669; }
     .role-citizen { color: #475569; }
 
-    /* 단체 전광판 (이름 크기 및 가시성 대폭 향상) */
     .host-dashboard {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -609,12 +607,11 @@
     let lastNotifiedEndGameId = null;
     let isRendering = false;
 
-    // 직업별 사망 시 차림새(아이콘) 반환 함수
     function getDeadAvatarByRole(role) {
-      if (role === ROLES.MAFIA) return '🦹‍♂️'; // 수갑/포승줄 찬 마피아
-      if (role === ROLES.POLICE) return '🚨'; // 순찰차 경광등 / 제복 차림
-      if (role === ROLES.DOCTOR) return '🩺'; // 환자복 / 청진기 차림
-      return '👻'; // 일반 시민 유령
+      if (role === ROLES.MAFIA) return '🦹‍♂️';
+      if (role === ROLES.POLICE) return '🚨';
+      if (role === ROLES.DOCTOR) return '🩺';
+      return '👻';
     }
 
     function playChimeSound() {
@@ -934,7 +931,6 @@
       }
     }
 
-    // 🖥️ 방장 중앙 관전 통제판 (이름 크기 대폭 상향 및 사망 시 차림새 적용)
     function renderHostDashboard(data) {
       const players = Object.values(data.players || {});
       const nightActions = data.nightActions || {};
@@ -954,7 +950,6 @@
         else if (p.role === ROLES.CITIZEN) actionStatus = '🧑‍🌾 휴식 중';
         else if (nightActions[p.id]) actionStatus = '✅ 완료';
 
-        // 사망 시 직업별 맞춤 차림새 아이콘 부여
         const avatarDisplay = p.isAlive ? '👤' : getDeadAvatarByRole(p.role);
 
         card.innerHTML = `
@@ -1060,6 +1055,7 @@
       updates[`rooms/${clientState.roomCode}/nightActions`] = null;
       updates[`rooms/${clientState.roomCode}/latestGameEvent`] = null;
       updates[`rooms/${clientState.roomCode}/gameOverInfo`] = null;
+      updates[`rooms/${clientState.roomCode}/isConcluding`] = false;
 
       await update(ref(db), updates);
     });
@@ -1198,7 +1194,6 @@
           statusHtml = `<span class="status-badge" style="background:#fee2e2; color:#991b1b;">${reasonText}</span>`;
         }
 
-        // 낮 그리드에도 사망 시 직업 맞춤 차림새 적용
         const avatarDisplay = p.isAlive ? '👤' : getDeadAvatarByRole(p.role);
 
         card.innerHTML = `
@@ -1229,6 +1224,7 @@
     });
 
     async function autoCompleteDayVotesAndConclude(data) {
+      if (data.isConcluding) return;
       const players = Object.values(data.players || {});
       const alivePlayers = players.filter(p => p.isAlive);
       const currentVotes = data.dayVotes || {};
@@ -1244,6 +1240,9 @@
     }
 
     async function concludeDayVoting(data, votes) {
+      if (data.isConcluding) return;
+      await update(ref(db, `rooms/${clientState.roomCode}`), { isConcluding: true });
+
       const voteCounts = {};
       Object.values(votes).forEach(tId => {
         voteCounts[tId] = (voteCounts[tId] || 0) + 1;
@@ -1297,7 +1296,8 @@
         status: 'NIGHT',
         dayAnnouncement: announcement,
         dayVotes: null,
-        nightActions: null
+        nightActions: null,
+        isConcluding: false
       });
     }
 
@@ -1457,26 +1457,36 @@
       });
     });
 
+    // 🛡️ [강화된 밤 정산 체크 함수] 중복 실행 방지 잠금(isConcluding) 적용
     async function checkAndConcludeNightHostOnly(data) {
+      if (data.isConcluding || data.status !== 'NIGHT') return;
+
       const players = Object.values(data.players || {});
-      const aliveSpecialPlayers = players.filter(p => p.isAlive && p.role !== ROLES.CITIZEN);
       const nightActions = data.nightActions || {};
 
-      const actedCount = aliveSpecialPlayers.filter(p => nightActions[p.id]).length;
+      // 생존한 특수 직업들 중 아직 행동을 제출하지 않은 사람 탐색
+      const aliveSpecialPlayers = players.filter(p => p.isAlive && p.role !== ROLES.CITIZEN);
+      const unactedSpecial = aliveSpecialPlayers.filter(p => !nightActions[p.id]);
 
-      if (aliveSpecialPlayers.length > 0 && actedCount >= aliveSpecialPlayers.length) {
+      // 생존한 특수 직업 전원이 행동을 완료했거나 특수직업이 없는 경우 즉시 정산
+      if (aliveSpecialPlayers.length === 0 || unactedSpecial.length === 0) {
         await concludeNightActions(data, nightActions);
       }
     }
 
     async function concludeNightActions(data, actions) {
+      if (data.isConcluding) return;
+      
+      // 즉시 락을 걸어 중복 정산 원천 차단
+      await update(ref(db, `rooms/${clientState.roomCode}`), { isConcluding: true });
+
       const players = data.players || {};
       const mafiaVotes = {};
       let doctorTarget = null;
 
       for (const [pId, tId] of Object.entries(actions)) {
         const p = players[pId];
-        if (!p) continue;
+        if (!p || !p.isAlive) continue;
         if (p.role === ROLES.MAFIA) mafiaVotes[tId] = (mafiaVotes[tId] || 0) + 1;
         if (p.role === ROLES.DOCTOR) doctorTarget = tId;
       }
@@ -1537,7 +1547,8 @@
         dayCount: nextDayCount,
         dayAnnouncement: `☀️ 밤사이의 일들이 정리되고 새로운 아침이 밝았습니다.`,
         nightActions: null,
-        timerEndTime: Date.now() + 30000
+        timerEndTime: Date.now() + 30000,
+        isConcluding: false
       });
     }
 
@@ -1602,6 +1613,7 @@
       updates[`rooms/${clientState.roomCode}/nightActions`] = null;
       updates[`rooms/${clientState.roomCode}/latestGameEvent`] = null;
       updates[`rooms/${clientState.roomCode}/gameOverInfo`] = null;
+      updates[`rooms/${clientState.roomCode}/isConcluding`] = false;
 
       await update(ref(db), updates);
       window.location.reload();
